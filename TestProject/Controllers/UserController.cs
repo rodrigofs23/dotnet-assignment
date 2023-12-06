@@ -10,12 +10,10 @@ namespace Work.Controllers
     public class UserController : ControllerBase
     {
 
-        private readonly ILogger<UserController> _logger;
         private readonly IRepository<User, Guid> _userRepository;
 
-        public UserController(ILogger<UserController> logger, IRepository<User, Guid> userRepository)
+        public UserController(IRepository<User, Guid> userRepository)
         {
-            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
         }
 
@@ -25,7 +23,6 @@ namespace Work.Controllers
             var user = _userRepository.Read(id);
             if (user == null)
             {
-                _logger.LogInformation("User with ID {UserId} not found", id);
                 return NotFound();
             }
             return Ok(user);
@@ -47,7 +44,6 @@ namespace Work.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error creating user");
                 return StatusCode(500, ex.Message);
             }
         }
@@ -81,7 +77,6 @@ namespace Work.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error deleting user with ID {UserId}", id);
                 return StatusCode(500, ex.Message);
             }
         }
